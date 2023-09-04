@@ -1,11 +1,12 @@
 import * as XLSX from "xlsx";
 import { Round_List, Round_List_Header } from "../../layouts";
 import { InputField } from "../../components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { roundActions } from "../../store/round";
 
 export default function Rounds_Page() {
   const dispatch = useDispatch();
+  const receipts = useSelector((state) => state.round.round);
 
   const fileHandler = (event) => {
     const reader = new FileReader();
@@ -17,15 +18,8 @@ export default function Rounds_Page() {
       const round = XLSX.utils.sheet_to_json(workSheet);
 
       round.forEach((receipt) => {
-        // dispatch(roundActions.addReceipt(receipt));
+        dispatch(roundActions.addReceipt(receipt));
       });
-      // const r = {};
-      // Object.keys(round).forEach((c) => {
-      //   c["المنطقة"].length > 0
-      //     ? (r[c["المنطقة"]][c["الاسم"]][c["موقف التعامل"]] = c["موقف التعامل"])
-      //     : (r["غير مدون"][c["الاسم"]][c["موقف التعامل"]] = c["موقف التعامل"]);
-      // });
-      // console.log(r);
     };
   };
 
@@ -40,11 +34,12 @@ export default function Rounds_Page() {
         className="flex-col text-center mx-auto max-w-xs text-sm border rounded-lg py-1 px-3 my-4 hover:bg-gray-700 hover:border-transparent transition"
         onChange={fileHandler}
       />
-      <p className="text-center">غير متاح الآن</p>
-      {/* <section className="w-fit mx-auto">
-                <Round_List_Header />
-                <Round_List />
-            </section> */}
+      {receipts === {} || (
+        <section className="w-fit mx-auto">
+          <Round_List_Header />
+          <Round_List />
+        </section>
+      )}
     </main>
   );
 }
