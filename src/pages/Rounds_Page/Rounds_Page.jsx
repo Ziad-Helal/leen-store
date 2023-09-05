@@ -34,7 +34,7 @@ export default function Rounds_Page() {
         className="flex-col text-center mx-auto max-w-xs text-sm border rounded-lg py-1 px-3 my-4 hover:bg-gray-700 hover:border-transparent transition"
         onChange={fileHandler}
       />
-      {receipts === {} || (
+      {Object.keys(receipts).length > 0 && (
         <section className="w-fit mx-auto">
           <Round_List_Header />
           <Round_List />
