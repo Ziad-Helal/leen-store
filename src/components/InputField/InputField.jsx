@@ -13,6 +13,7 @@ function InputField(
     autoFocus = false,
     autoComplete = "on",
     className = "",
+    defaultValue = "",
     labelClassName = "",
     inputClassName = "",
     accept = "",
@@ -40,6 +41,7 @@ function InputField(
           placeholder={placeholder}
           minLength={minLength}
           className={fieldClasses}
+          defaultValue={defaultValue}
           autoComplete={autoComplete}
           required={required}
           autoFocus={autoFocus}
@@ -53,6 +55,7 @@ function InputField(
           placeholder={placeholder}
           minLength={minLength}
           className={fieldClasses}
+          defaultValue={defaultValue}
           autoComplete={autoComplete}
           required={required}
           autoFocus={autoFocus}
@@ -69,6 +72,7 @@ function InputField(
           placeholder={placeholder}
           minLength={minLength}
           className={fieldClasses}
+          defaultValue={defaultValue}
           accept={accept}
           autoComplete={autoComplete}
           required={required}

@@ -23,17 +23,21 @@ export default function Round_List() {
           <section className="flex flex-wrap gap-1">
             {Object.keys(finishedRound[clientName].receipts)
               .sort((a, b) => a - b)
-              .map((receiptNumber) => (
-                <span
-                  key={receiptNumber}
-                  className={`border rounded-full px-2 ${
-                    finishedRound[clientName].receipts[receiptNumber].net <
-                      500 && "text-red-500"
-                  }`}
-                >
-                  {receiptNumber}
-                </span>
-              ))}
+              .map(
+                (receiptNumber) =>
+                  finishedRound[clientName].receipts[receiptNumber]
+                    .numberOfPrints > 0 && (
+                    <span
+                      key={receiptNumber}
+                      className={`border rounded-full px-2 ${
+                        finishedRound[clientName].receipts[receiptNumber].net <
+                          500 && "text-red-500"
+                      }`}
+                    >
+                      {receiptNumber}
+                    </span>
+                  )
+              )}
           </section>
         </li>
       ))}
