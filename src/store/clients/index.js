@@ -3,6 +3,7 @@ import {
   getAllClients,
   deleteAllClients,
   updateSrarredClients,
+  addClient,
 } from "./clients-actionCreators";
 
 export {
@@ -10,4 +11,5 @@ export {
   getAllClients,
   deleteAllClients,
   updateSrarredClients,
+  addClient,
 };

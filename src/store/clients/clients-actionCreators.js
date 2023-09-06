@@ -132,3 +132,9 @@ export const updateSrarredClients = ({
     );
   };
 };
+
+export const addClient = ({ name, tel1, tel2, region, address, location }) => {
+  return (dispatch) => {
+    console.log({ name, tel1, tel2, region, address, location });
+  };
+};

@@ -1,11 +1,14 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addClient } from "../../../store/clients";
 import { Form, InputField, Button } from "../../../components";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../../config/firebase";
 import * as XLSX from "xlsx";
 
 export default function CreateClient_Form() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const nameRef = useRef();
   const tel1Ref = useRef();
@@ -13,11 +16,30 @@ export default function CreateClient_Form() {
   const regionRef = useRef();
   const addressRef = useRef();
   const locationRef = useRef();
+  const clients = useSelector((state) => state.clients.clients);
 
   const submitHandler = async (event) => {
     event.preventDefault();
 
-    // const displayName
+    const name = nameRef.current.value;
+    const tel1 = tel1Ref.current.value;
+    const tel2 = tel2Ref.current.value;
+    const region = regionRef.current.value;
+    const address = addressRef.current.value;
+    const location = locationRef.current.value;
+
+    if (
+      Object.keys(clients).find((clientName) => clientName === name) ===
+      undefined
+    ) {
+      dispatch(addClient({ name, tel1, tel2, region, address, location }));
+      nameRef.current.value = "";
+      tel1Ref.current.value = "";
+      tel2Ref.current.value = "";
+      regionRef.current.value = "";
+      addressRef.current.value = "";
+      locationRef.current.value = "";
+    } else alert("هذا العميل موجود بالفعل!");
 
     // try {
     //   await setDoc(doc(db, "clients", ))
@@ -108,7 +130,7 @@ export default function CreateClient_Form() {
       <Button
         type="submit"
         kind="primary"
-        className="flex-col my-4 hover:bg-primary_800"
+        className="flex-col my-4 hover:bg-primary_700"
       >
         تأكيد
       </Button>
