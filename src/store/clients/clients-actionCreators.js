@@ -133,8 +133,17 @@ export const updateSrarredClients = ({
   };
 };
 
-export const addClient = ({ name, tel1, tel2, region, address, location }) => {
-  return (dispatch) => {
-    console.log({ name, tel1, tel2, region, address, location });
+export const addClient = (
+  { name, tel1, tel2, region, address, location },
+  allUsers
+) => {
+  return async (dispatch) => {
+    Object.keys(allUsers).forEach(async (user) => {
+      const addedClients = (await getDoc(doc(db, "users", user))).data()
+        .addedClients;
+      await updateDoc(doc(db, "users", user), {
+        addedClients: addedClients.concat(name),
+      });
+    });
   };
 };

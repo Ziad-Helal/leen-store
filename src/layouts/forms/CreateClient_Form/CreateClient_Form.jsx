@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addClient } from "../../../store/clients";
+import { getAllUsers } from "../../../store/user";
 import { Form, InputField, Button } from "../../../components";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../../config/firebase";
@@ -10,13 +11,14 @@ import * as XLSX from "xlsx";
 export default function CreateClient_Form() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const clients = useSelector((state) => state.clients.clients);
+  const allUsers = useSelector((state) => state.user.allUsers);
   const nameRef = useRef();
   const tel1Ref = useRef();
   const tel2Ref = useRef();
   const regionRef = useRef();
   const addressRef = useRef();
   const locationRef = useRef();
-  const clients = useSelector((state) => state.clients.clients);
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -28,24 +30,22 @@ export default function CreateClient_Form() {
     const address = addressRef.current.value;
     const location = locationRef.current.value;
 
-    if (
-      Object.keys(clients).find((clientName) => clientName === name) ===
-      undefined
-    ) {
-      dispatch(addClient({ name, tel1, tel2, region, address, location }));
-      nameRef.current.value = "";
-      tel1Ref.current.value = "";
-      tel2Ref.current.value = "";
-      regionRef.current.value = "";
-      addressRef.current.value = "";
-      locationRef.current.value = "";
-    } else alert("هذا العميل موجود بالفعل!");
+    // dispatch(getAllUsers())
 
-    // try {
-    //   await setDoc(doc(db, "clients", ))
-    // } catch(error) {
-    //   alert(error)
-    // }
+    // if (
+    //   Object.keys(clients).find((clientName) => clientName === name) ===
+    //   undefined
+    // ) {
+    //   dispatch(
+    //     addClient({ name, tel1, tel2, region, address, location }, allUsers)
+    //   );
+    //   nameRef.current.value = "";
+    //   tel1Ref.current.value = "";
+    //   tel2Ref.current.value = "";
+    //   regionRef.current.value = "";
+    //   addressRef.current.value = "";
+    //   locationRef.current.value = "";
+    // } else alert("هذا العميل موجود بالفعل!");
   };
 
   const fileHandler = (event) => {
