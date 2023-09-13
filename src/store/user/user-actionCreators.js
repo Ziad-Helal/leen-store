@@ -34,6 +34,8 @@ export const authUser = ({ type, name, email, password }, navigate) => {
             displayName: name,
             userRole: "مستخدم جديد",
             starredClients: [],
+            addedClients: [],
+            deletedClients: [],
           });
           break;
 
@@ -54,6 +56,8 @@ export const authUser = ({ type, name, email, password }, navigate) => {
                 photoURL: user.photoURL,
                 userRole: "مستخدم جديد",
                 starredClients: [],
+                addedClients: [],
+                deletedClients: [],
               });
           });
           break;

@@ -1,4 +1,4 @@
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEllipsisV,
@@ -17,13 +17,23 @@ import {
   Client_ListItem,
   ClientsFilter_List,
   ClientsOptions_List,
+  UpdateClient_Form,
 } from "../../../layouts";
 
 function Clients_List() {
   const dispatch = useDispatch();
-  const { clientsOptionsIsOpen, clientsFilterIsOpen } = useSelector(
-    (state) => state.general.lists
-  );
+  const [clientToUpdate, setClientToUpdate] = useState({
+    الاسم: "",
+    تليفون: "",
+    تليفون2: "",
+    العنوان: "",
+    الموقع: "",
+    المنطقة: "",
+  });
+  const userEmail = useSelector((state) => state.user.currentUser.email);
+  const allUsers = useSelector((state) => state.user.allUsers);
+  const { clientsOptionsIsOpen, clientsFilterIsOpen, updateClientFormIsOpen } =
+    useSelector((state) => state.general.lists);
   const loading = useSelector((state) => state.general.loading.clients);
   const { filteredClients, clients } = useSelector((state) => state.clients);
   const numberOfClients = Object.keys(clients).length;
@@ -49,7 +59,13 @@ function Clients_List() {
     dispatch(clientsActions.setPageNumber(lastPageNumber));
 
   useEffect(() => {
-    if (numberOfClients === 0) dispatch(getAllClients());
+    if (numberOfClients === 0) dispatch(getAllClients(userEmail));
+
+    return () => {
+      dispatch(generalActions.hideList("updateClientForm"));
+      dispatch(generalActions.hideList("clientsOptions"));
+      dispatch(generalActions.hideList("clientsFilter"));
+    };
   }, []);
 
   const filterClients = (event) => {
@@ -172,13 +188,37 @@ function Clients_List() {
               الموقع={الموقع}
               صيدلية={صيدلية}
               المنطقة={المنطقة}
+              allUsers={allUsers}
+              showUpdateForm={({
+                الاسم,
+                تليفون2,
+                العنوان,
+                صيدلية,
+                تليفون,
+                الموقع,
+                المنطقة,
+              }) => {
+                setClientToUpdate({
+                  الاسم,
+                  تليفون2,
+                  العنوان,
+                  صيدلية,
+                  تليفون,
+                  الموقع,
+                  المنطقة,
+                });
+              }}
             />
           )
         )}
       </ul>
       <div className="flex items-center justify-center gap-2">
         <p>عرض عدد</p>
-        <InputField type="select" onChange={changeNumOfClientsPerPage}>
+        <InputField
+          type="select"
+          onChange={changeNumOfClientsPerPage}
+          defaultValue={clientsPerPage}
+        >
           <option value="10">10</option>
           <option value="20">20</option>
           <option value="50">50</option>
@@ -186,6 +226,16 @@ function Clients_List() {
         </InputField>
         <p>عميل في كل صفحة</p>
       </div>
+      {updateClientFormIsOpen && (
+        <UpdateClient_Form
+          الاسم={clientToUpdate.الاسم}
+          تليفون={clientToUpdate.تليفون}
+          تليفون2={clientToUpdate.تليفون2}
+          المنطقة={clientToUpdate.المنطقة}
+          العنوان={clientToUpdate.العنوان}
+          الموقع={clientToUpdate.الموقع}
+        />
+      )}
     </section>
   );
 }

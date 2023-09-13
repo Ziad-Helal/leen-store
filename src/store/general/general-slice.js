@@ -7,6 +7,7 @@ const initialState = {
     clientsFilterIsOpen: false,
     roundFiltersIsOpen: false,
     roundAreaFilterIsOpen: false,
+    updateClientFormIsOpen: false,
   },
   loading: {
     user: false,
@@ -56,6 +57,13 @@ export const generalSlice = createSlice({
           state.lists.mainNavIsOpen = false;
           break;
 
+        case "updateClientForm":
+          state.lists.updateClientFormIsOpen = true;
+          state.lists.clientsFilterIsOpen = false;
+          state.lists.clientsOptionsIsOpen = false;
+          state.lists.mainNavIsOpen = false;
+          break;
+
         default:
           console.log("wrong list name");
           break;
@@ -82,6 +90,10 @@ export const generalSlice = createSlice({
 
         case "roundAreaFilter":
           state.lists.roundAreaFilterIsOpen = false;
+          break;
+
+        case "updateClientForm":
+          state.lists.updateClientFormIsOpen = false;
           break;
 
         default:

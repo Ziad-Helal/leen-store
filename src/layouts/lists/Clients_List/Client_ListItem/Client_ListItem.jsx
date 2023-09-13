@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../../../../components";
-import { updateSrarredClients } from "../../../../store/clients";
+import { updateSrarredClients, deleteClient } from "../../../../store/clients";
+import { generalActions } from "../../../../store/general";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPhone,
@@ -15,7 +16,16 @@ import {
 import { memo, useState } from "react";
 
 function Client_ListItem(
-  { الاسم, تليفون, تليفون2, العنوان, الموقع, المنطقة },
+  {
+    الاسم,
+    تليفون,
+    تليفون2,
+    العنوان,
+    الموقع,
+    المنطقة,
+    allUsers,
+    showUpdateForm = () => {},
+  },
   key
 ) {
   const dispatch = useDispatch();
@@ -48,9 +58,23 @@ function Client_ListItem(
     setModify(false);
   };
 
-  const editClient = () => {};
+  const editClient = () => {
+    dispatch(generalActions.showList("updateClientForm"));
+    showUpdateForm({
+      الاسم,
+      تليفون,
+      تليفون2,
+      العنوان,
+      الموقع,
+      المنطقة,
+      allUsers,
+    });
+  };
 
-  const deleteClient = () => {};
+  const eraseClient = () => {
+    const erase = confirm(`هل تريد حذف بيانات العميل "${الاسم}"؟`);
+    if (erase) dispatch(deleteClient(الاسم, allUsers));
+  };
 
   return (
     <li
@@ -144,7 +168,7 @@ function Client_ListItem(
               modify ? "block" : "hidden"
             } text-red-500 hover:text-red-400`}
             title="احذف بيانات العميل"
-            onClick={deleteClient}
+            onClick={eraseClient}
           >
             <FontAwesomeIcon icon={faTrashCan} />
           </Button>

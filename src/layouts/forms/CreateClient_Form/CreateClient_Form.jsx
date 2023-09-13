@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addClient } from "../../../store/clients";
@@ -20,32 +20,43 @@ export default function CreateClient_Form() {
   const addressRef = useRef();
   const locationRef = useRef();
 
+  useEffect(() => {
+    if (Object.keys(allUsers).length === 0) dispatch(getAllUsers());
+  }, []);
+
   const submitHandler = async (event) => {
     event.preventDefault();
+    const confirmClient = confirm(
+      "هل بيانات العميل جاهزة لإضافته إلى قاعدة العملاء؟"
+    );
 
-    const name = nameRef.current.value;
-    const tel1 = tel1Ref.current.value;
-    const tel2 = tel2Ref.current.value;
-    const region = regionRef.current.value;
-    const address = addressRef.current.value;
-    const location = locationRef.current.value;
+    if (confirmClient) {
+      const name = nameRef.current.value;
+      const tel1 = tel1Ref.current.value;
+      const tel2 = tel2Ref.current.value;
+      const region = regionRef.current.value;
+      const address = addressRef.current.value;
+      const location = locationRef.current.value;
 
-    // dispatch(getAllUsers())
-
-    // if (
-    //   Object.keys(clients).find((clientName) => clientName === name) ===
-    //   undefined
-    // ) {
-    //   dispatch(
-    //     addClient({ name, tel1, tel2, region, address, location }, allUsers)
-    //   );
-    //   nameRef.current.value = "";
-    //   tel1Ref.current.value = "";
-    //   tel2Ref.current.value = "";
-    //   regionRef.current.value = "";
-    //   addressRef.current.value = "";
-    //   locationRef.current.value = "";
-    // } else alert("هذا العميل موجود بالفعل!");
+      if (
+        Object.keys(clients).find((clientName) => clientName === name) ===
+        undefined
+      ) {
+        dispatch(
+          addClient(
+            { name, tel1, tel2, region, address, location },
+            allUsers,
+            clients
+          )
+        );
+        nameRef.current.value = "";
+        tel1Ref.current.value = "";
+        tel2Ref.current.value = "";
+        regionRef.current.value = "";
+        addressRef.current.value = "";
+        locationRef.current.value = "";
+      } else alert("هذا العميل موجود بالفعل!");
+    }
   };
 
   const fileHandler = (event) => {
@@ -65,10 +76,10 @@ export default function CreateClient_Form() {
             الموقع: !!client.الموقع ? client.الموقع : "",
             تليفون: !!client.تليفون ? client.تليفون : "",
             تليفون2: !!client.تليفون2 ? client.تليفون2 : "",
-          });
-
-          await setDoc(doc(db, "clients", "updated"), {
-            clientsUpdated: Date.now(),
+          }).then(async () => {
+            await setDoc(doc(db, "clients", "updated"), {
+              clientsUpdated: Date.now(),
+            });
           });
         } catch (error) {
           alert(error);

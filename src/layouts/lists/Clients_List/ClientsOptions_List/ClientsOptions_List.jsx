@@ -9,7 +9,10 @@ export default function ClientsOptions_List({ className = "", show = false }) {
   const userRole = useSelector((state) => state.user.currentUser.userRole);
 
   const eraseAllClients = () => {
-    dispatch(deleteAllClients());
+    const erase = confirm(
+      "هل أنت متأكد أنك تريد حذف جميع العملاء من قاعدة البيانات؟"
+    );
+    if (erase) dispatch(deleteAllClients());
   };
 
   return (

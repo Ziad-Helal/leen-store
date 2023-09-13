@@ -16,6 +16,11 @@ export const clientsSlice = createSlice({
   initialState,
   reducers: {
     setClients(state, action) {
+      state.clients = {};
+      state.geoClients = {};
+      state.filteredClients = [];
+      state.toBeFilterd = {};
+
       Object.keys(action.payload).forEach((ClientName) => {
         const client = action.payload[ClientName];
         state.clients[ClientName] = client;
@@ -30,6 +35,7 @@ export const clientsSlice = createSlice({
         if (state.region === "الكل" && region != "غير محدد")
           state.filteredClients.push({ الاسم: ClientName, ...client });
       });
+
       state.toBeFilterd = state.clients;
     },
     addStarredClient(state, action) {

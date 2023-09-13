@@ -6,11 +6,12 @@ import {
   doc,
   getDoc,
   getDocs,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { auth, db } from "../../config/firebase";
 
-export const getAllClients = () => {
+export const getAllClients = (userEmail) => {
   let clients = {};
 
   return async (dispatch) => {
@@ -21,7 +22,39 @@ export const getAllClients = () => {
       .clientsUpdated;
 
     if (localClientsUpdated > clientsUpdated)
-      clients = JSON.parse(localStorage.getItem("clients"));
+      try {
+        clients = JSON.parse(localStorage.getItem("clients"));
+
+        const { addedClients, deletedClients } = (
+          await getDoc(doc(db, "users", userEmail))
+        ).data();
+        if (addedClients.length) {
+          await updateDoc(doc(db, "users", userEmail), {
+            addedClients: [],
+          });
+
+          addedClients.forEach(async (clientName) => {
+            const newClient = (
+              await getDoc(doc(db, "clients", clientName))
+            ).data();
+            clients[clientName] = newClient;
+          });
+        }
+
+        if (deletedClients.length) {
+          await updateDoc(doc(db, "users", userEmail), {
+            deletedClients: [],
+          });
+
+          deletedClients.forEach((clientName) => {
+            delete clients[clientName];
+          });
+        }
+
+        localStorage.setItem("clients", JSON.stringify(clients));
+      } catch (error) {
+        console.log(error);
+      }
     else
       try {
         const clientsDocs = await getDocs(collection(db, "clients"));
@@ -35,13 +68,18 @@ export const getAllClients = () => {
           localStorage.setItem("clients", JSON.stringify(clients));
           localStorage.setItem("clientsUpdated", Date.now());
         }
+
+        await updateDoc(doc(db, "users", userEmail), {
+          addedClients: [],
+          deletedClients: [],
+        });
       } catch (error) {
         alert(error);
       }
 
     try {
       const starredClientsNames = (
-        await getDoc(doc(db, "users", auth.currentUser.email))
+        await getDoc(doc(db, "users", userEmail))
       ).data().starredClients;
 
       if (starredClientsNames.length > 0)
@@ -135,15 +173,110 @@ export const updateSrarredClients = ({
 
 export const addClient = (
   { name, tel1, tel2, region, address, location },
+  allUsers,
+  clients
+) => {
+  return async (dispatch) => {
+    try {
+      await setDoc(doc(db, "clients", name), {
+        العنوان: !!address ? address : "",
+        المنطقة: !!region ? region : "",
+        الموقع: !!location ? location : "",
+        تليفون: !!tel1 ? tel1 : "",
+        تليفون2: !!tel2 ? tel2 : "",
+      });
+
+      Object.keys(allUsers).forEach(async (user) => {
+        const addedClients = (await getDoc(doc(db, "users", user))).data()
+          .addedClients;
+        if (addedClients.find((client) => client === name) === undefined)
+          await updateDoc(doc(db, "users", user), {
+            addedClients: addedClients.concat(name),
+          });
+      });
+    } catch (error) {
+      alert(error);
+    }
+
+    const newClients = await JSON.parse(JSON.stringify(clients));
+    newClients[name] = {
+      العنوان: !!address ? address : "",
+      المنطقة: !!region ? region : "",
+      الموقع: !!location ? location : "",
+      تليفون: !!tel1 ? tel1 : "",
+      تليفون2: !!tel2 ? tel2 : "",
+    };
+
+    dispatch(clientsActions.setClients(newClients));
+    localStorage.setItem("clients", JSON.stringify(newClients));
+  };
+};
+
+export const deleteClient = (clientName, allUsers) => {
+  return async (dispatch) => {
+    try {
+      Object.keys(allUsers).forEach(async (user) => {
+        const deletedClients = (await getDoc(doc(db, "users", user))).data()
+          .deletedClients;
+        if (
+          deletedClients.find((client) => client === clientName) === undefined
+        )
+          await updateDoc(doc(db, "users", user), {
+            deletedClients: deletedClients.concat(clientName),
+          });
+      });
+
+      await deleteDoc(doc(db, "clients", clientName));
+
+      const newClients = JSON.parse(localStorage.getItem("clients"));
+      delete newClients[clientName];
+
+      dispatch(clientsActions.setClients(newClients));
+      localStorage.setItem("clients", JSON.stringify(newClients));
+    } catch (error) {
+      alert(error);
+    }
+  };
+};
+
+export const updateClient = (
+  oldName,
+  { الاسم, تليفون, تليفون2, المنطقة, العنوان, الموقع },
   allUsers
 ) => {
   return async (dispatch) => {
-    Object.keys(allUsers).forEach(async (user) => {
-      const addedClients = (await getDoc(doc(db, "users", user))).data()
-        .addedClients;
-      await updateDoc(doc(db, "users", user), {
-        addedClients: addedClients.concat(name),
+    try {
+      await setDoc(doc(db, "clients", الاسم), {
+        العنوان: !!العنوان ? العنوان : "",
+        المنطقة: !!المنطقة ? المنطقة : "",
+        الموقع: !!الموقع ? الموقع : "",
+        تليفون: !!تليفون ? تليفون : "",
+        تليفون2: !!تليفون2 ? تليفون2 : "",
       });
-    });
+
+      Object.keys(allUsers).forEach(async (user) => {
+        const addedClients = (await getDoc(doc(db, "users", user))).data()
+          .addedClients;
+        if (addedClients.find((client) => client === الاسم) === undefined)
+          await updateDoc(doc(db, "users", user), {
+            addedClients: addedClients.concat(الاسم),
+          });
+      });
+
+      const newClients = JSON.parse(localStorage.getItem("clients"));
+      delete newClients[oldName];
+      newClients[الاسم] = {
+        العنوان: !!العنوان ? العنوان : "",
+        المنطقة: !!المنطقة ? المنطقة : "",
+        الموقع: !!الموقع ? الموقع : "",
+        تليفون: !!تليفون ? تليفون : "",
+        تليفون2: !!تليفون2 ? تليفون2 : "",
+      };
+
+      dispatch(clientsActions.setClients(newClients));
+      localStorage.setItem("clients", JSON.stringify(newClients));
+    } catch (error) {
+      alert(error);
+    }
   };
 };

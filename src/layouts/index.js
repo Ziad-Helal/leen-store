@@ -4,6 +4,7 @@ import NavigationBar from "./NavigationBar/NavigationBar";
 import Login_Form from "./forms/Login_Form/Login_Form";
 import Registeration_Form from "./forms/Registeration_Form/Registeration_Form";
 import CreateClient_Form from "./forms/CreateClient_Form/CreateClient_Form";
+import UpdateClient_Form from "./forms/UpdateClient_Form/UpdateClient_Form";
 import Clients_List from "./lists/Clients_List/Clients_List";
 import Client_ListItem from "./lists/Clients_List/Client_ListItem/Client_ListItem";
 import ClientsFilter_List from "./lists/Clients_List/ClientsFilter_List/ClientsFilter_List";
@@ -22,6 +23,7 @@ export {
   Login_Form,
   Registeration_Form,
   CreateClient_Form,
+  UpdateClient_Form,
   ClientsFilter_List,
   Clients_List,
   Client_ListItem,
