@@ -39,7 +39,7 @@ export default function Main_PageLayout_Header() {
             <FontAwesomeIcon icon={faBars} />
           </Button>
           <NavigationBar
-            className={`absolute top-0 left-0 h-screen ${
+            className={`fixed top-0 left-0 h-screen ${
               mainNavIsOpen ? "w-screen sm:w-72" : "w-0"
             } transition-all z-20`}
           />

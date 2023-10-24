@@ -1,5 +1,6 @@
 import { generalActions } from "../../store/general";
 import { clientsActions } from "../../store/clients";
+import { roundActions } from "../../store/round";
 import {
   collection,
   deleteDoc,
@@ -98,6 +99,7 @@ export const getAllClients = (userEmail) => {
 
     dispatch(clientsActions.setClients(clients));
     dispatch(generalActions.loaded("clients"));
+    dispatch(roundActions.getClients(clients));
   };
 };
 
@@ -174,7 +176,8 @@ export const updateSrarredClients = ({
 export const addClient = (
   { name, tel1, tel2, region, address, location },
   allUsers,
-  clients
+  clients,
+  geoClients
 ) => {
   return async (dispatch) => {
     try {
@@ -207,8 +210,14 @@ export const addClient = (
       تليفون2: !!tel2 ? tel2 : "",
     };
 
+    if (!Object.keys(geoClients).includes(region)) {
+      dispatch(roundActions.modifyRoundLimit({ region, amount: 500 }));
+      dispatch(roundActions.addUnAssignedRegions(region));
+    }
+
     dispatch(clientsActions.setClients(newClients));
     localStorage.setItem("clients", JSON.stringify(newClients));
+    dispatch(roundActions.getClients(clients));
   };
 };
 
@@ -233,6 +242,7 @@ export const deleteClient = (clientName, allUsers) => {
 
       dispatch(clientsActions.setClients(newClients));
       localStorage.setItem("clients", JSON.stringify(newClients));
+      dispatch(roundActions.getClients(clients));
     } catch (error) {
       alert(error);
     }
@@ -275,6 +285,7 @@ export const updateClient = (
 
       dispatch(clientsActions.setClients(newClients));
       localStorage.setItem("clients", JSON.stringify(newClients));
+      dispatch(roundActions.getClients(clients));
     } catch (error) {
       alert(error);
     }

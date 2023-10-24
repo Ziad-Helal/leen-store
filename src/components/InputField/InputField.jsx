@@ -14,6 +14,8 @@ function InputField(
     autoComplete = "on",
     className = "",
     defaultValue = "",
+    step = 1,
+    checked = false,
     labelClassName = "",
     inputClassName = "",
     accept = "",
@@ -73,6 +75,8 @@ function InputField(
           minLength={minLength}
           className={fieldClasses}
           defaultValue={defaultValue}
+          step={step}
+          checked={checked}
           accept={accept}
           autoComplete={autoComplete}
           required={required}

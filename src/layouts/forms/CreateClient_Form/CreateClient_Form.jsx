@@ -11,7 +11,7 @@ import * as XLSX from "xlsx";
 export default function CreateClient_Form() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const clients = useSelector((state) => state.clients.clients);
+  const { clients, geoClients } = useSelector((state) => state.clients);
   const allUsers = useSelector((state) => state.user.allUsers);
   const nameRef = useRef();
   const tel1Ref = useRef();
@@ -46,7 +46,8 @@ export default function CreateClient_Form() {
           addClient(
             { name, tel1, tel2, region, address, location },
             allUsers,
-            clients
+            clients,
+            geoClients
           )
         );
         nameRef.current.value = "";

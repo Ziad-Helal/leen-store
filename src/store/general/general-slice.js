@@ -7,13 +7,19 @@ const initialState = {
     clientsFilterIsOpen: false,
     roundFiltersIsOpen: false,
     roundAreaFilterIsOpen: false,
+    roundSettingsIsOpen: false,
     updateClientFormIsOpen: false,
+    roundSummaryIsOpen: false,
+    roundHistoryIsOpen: false,
+    archiveOrderIsOpen: false,
   },
   loading: {
     user: false,
     users: false,
     clients: false,
     formSubmition: false,
+    roundLimits: false,
+    roundsStructure: false,
   },
 };
 
@@ -57,6 +63,31 @@ export const generalSlice = createSlice({
           state.lists.mainNavIsOpen = false;
           break;
 
+        case "roundSettings":
+          state.lists.roundSettingsIsOpen = true;
+          state.lists.mainNavIsOpen = false;
+          state.lists.roundAreaFilterIsOpen = false;
+          state.lists.roundFiltersIsOpen = false;
+          break;
+
+        case "roundSummary":
+          state.lists.roundSummaryIsOpen = true;
+          state.lists.mainNavIsOpen = false;
+          state.lists.roundAreaFilterIsOpen = false;
+          state.lists.roundFiltersIsOpen = false;
+          break;
+
+        case "roundHistory":
+          state.lists.roundHistoryIsOpen = true;
+          state.lists.mainNavIsOpen = false;
+          state.lists.roundAreaFilterIsOpen = false;
+          state.lists.roundFiltersIsOpen = false;
+          break;
+
+        case "archiveOrder":
+          state.lists.archiveOrderIsOpen = true;
+          break;
+
         case "updateClientForm":
           state.lists.updateClientFormIsOpen = true;
           state.lists.clientsFilterIsOpen = false;
@@ -92,6 +123,22 @@ export const generalSlice = createSlice({
           state.lists.roundAreaFilterIsOpen = false;
           break;
 
+        case "roundSettings":
+          state.lists.roundSettingsIsOpen = false;
+          break;
+
+        case "roundSummary":
+          state.lists.roundSummaryIsOpen = false;
+          break;
+
+        case "roundHistory":
+          state.lists.roundHistoryIsOpen = false;
+          break;
+
+        case "archiveOrder":
+          state.lists.archiveOrderIsOpen = false;
+          break;
+
         case "updateClientForm":
           state.lists.updateClientFormIsOpen = false;
           break;
@@ -117,6 +164,14 @@ export const generalSlice = createSlice({
           state.loading.formSubmition = true;
           break;
 
+        case "roundLimits":
+          state.loading.roundLimits = true;
+          break;
+
+        case "roundsStructure":
+          state.loading.roundsStructure = true;
+          break;
+
         default:
           break;
       }
@@ -136,6 +191,14 @@ export const generalSlice = createSlice({
           break;
         case "formSubmition":
           state.loading.formSubmition = false;
+          break;
+
+        case "roundLimits":
+          state.loading.roundLimits = false;
+          break;
+
+        case "roundsStructure":
+          state.loading.roundsStructure = false;
           break;
 
         default:

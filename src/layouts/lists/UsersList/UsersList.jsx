@@ -36,7 +36,7 @@ export default function UsersList() {
                 <FontAwesomeIcon icon={faUser} className="w-10 text-4xl" />
               )}
               <p>{allUsers[user].displayName}</p>
-              {allUsers[user].displayName != currentUser.displayName && (
+              {/* {allUsers[user].displayName != currentUser.displayName && (
                 <div className="flex-auto text-end">
                   <FontAwesomeIcon
                     icon={faTrashCan}
@@ -44,7 +44,7 @@ export default function UsersList() {
                     onClick={deleteUserAccount}
                   />
                 </div>
-              )}
+              )} */}
             </div>
             <figcaption className="my-2 flex flex-wrap flex-1 flex-row-reverse gap-2 justify-between">
               <p>{user}</p>
